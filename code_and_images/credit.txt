@@ -1,0 +1,1 @@
+This assignment is closely based on James Hays' "Introduction to Computer Vision" (CS 4495/6476) Project 5, from Georgia Tech College of Computing. http://www.cc.gatech.edu/~hays/compvision/proj5/
