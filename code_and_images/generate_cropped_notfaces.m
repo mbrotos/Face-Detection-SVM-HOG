@@ -15,4 +15,8 @@ while n_have < n_want
     
     % generate random 36x36 crops from the non-face images
     
+    %pick random image
+    %take random crop
+
+    %until we got ~6000 crops
 end
