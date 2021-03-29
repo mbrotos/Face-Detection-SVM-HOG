@@ -11,3 +11,5 @@ fprintf('Classifier performance on train data:\n')
 confidences = [pos_feats; neg_feats]*w + b;
 
 [tp_rate, fp_rate, tn_rate, fn_rate] =  report_accuracy(confidences, labels);
+
+save('my_svm.mat','w','b')
