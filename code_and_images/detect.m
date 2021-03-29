@@ -9,6 +9,9 @@ image_names = cell(0,1);
 
 cellSize = 6;
 dim = 36;
+
+load('my_svm.mat')
+
 for i=1:nImages
     % load and show the image
     im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
@@ -27,8 +30,11 @@ for i=1:nImages
         for c=1:cols-5
 
         % create feature vector for the current window and classify it using the SVM model, 
+        featureV = feats(r:r+5,c:c+5);
         % take dot product between feature vector and w and add b,
+        classified = featureV*w + b;
 	% store the result in the matrix of confidence scores confs(r,c)
+        confs(r,c) = classified;
 
         end
     end
