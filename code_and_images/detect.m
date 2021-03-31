@@ -30,10 +30,10 @@ for i=1:nImages
         for c=1:cols-5
 
         % create feature vector for the current window and classify it using the SVM model, 
-        featureV = feats(r:r+5,c:c+5);
+        featureV = feats(r:r+5,c:c+5,:);
         % take dot product between feature vector and w and add b,
         classified = featureV*w + b;
-	% store the result in the matrix of confidence scores confs(r,c)
+        % store the result in the matrix of confidence scores confs(r,c)
         confs(r,c) = classified;
 
         end

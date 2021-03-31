@@ -12,11 +12,13 @@ mkdir(new_imageDir);
 dim = 36;
 
 while n_have < n_want
-    
-    % generate random 36x36 crops from the non-face images
-    
-    %pick random image
-    %take random crop
-
-    %until we got ~6000 crops
+    rand_img = floor((height(imageList)-1) * rand() + 1);
+    temp_img = imread(strcat(imageList(rand_img).folder, "/",imageList(rand_img).name));
+    temp_img = rgb2gray(temp_img);
+    [h, w] = size(temp_img);
+    rand_height = floor((h-37) * rand() + 1);
+    rand_width = floor((w-37) * rand() + 1);
+    gen_img = temp_img(rand_height:rand_height+36, rand_width:rand_width+36);
+    imwrite(gen_img, strcat(new_imageDir, "/", int2str(n_have), ".jpg"));
+    n_have = n_have + 1;
 end
