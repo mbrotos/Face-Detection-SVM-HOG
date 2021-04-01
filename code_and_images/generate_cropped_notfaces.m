@@ -23,16 +23,24 @@ while n_have < n_want
     n_have = n_have + 1;
 end
 %%
-new_imageDir2 = 'cropped_validation_images_face';
-new_imageDir3 = 'cropped_validation_images_notface';
-mkdir(new_imageDir2);
-mkdir(new_imageDir3);
+new_validationFaces = 'cropped_validation_images_faces';
+new_validationNotFaces = 'cropped_validation_images_notfaces';
+mkdir(new_validationFaces);
+mkdir(new_validationNotFaces);
+
 valid_size = round(n_want * (0.2));
-imageDir = 'cropped_training_images_notfaces';
-imageList = dir(sprintf('%s/*.jpg',imageDir));
-imageDir2 = 'cropped_training_images_faces';
-imageList2 = dir(sprintf('%s/*.jpg',imageDir2));
+
+notFaces_training = 'cropped_training_images_notfaces';
+notFaces_imageList_training = dir(sprintf('%s/*.jpg',notFaces_training));
+
+faces_training = 'cropped_training_images_faces';
+faces_imageList_training = dir(sprintf('%s/*.jpg',faces_training));
+
 for i=1:1:valid_size
-   movefile(strcat(imageList(i).folder, "/",imageList(i).name), 'cropped_validation_images_notface');
-   movefile(strcat(imageList2(i).folder, "/",imageList2(i).name), 'cropped_validation_images_face');
+    
+    movefile(strcat(notFaces_imageList_training(i).folder, "/", ...
+        notFaces_imageList_training(i).name), new_validationNotFaces);
+    
+    movefile(strcat(faces_imageList_training(i).folder, "/", ...
+        faces_imageList_training(i).name), new_validationFaces);
 end

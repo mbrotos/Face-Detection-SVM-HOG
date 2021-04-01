@@ -41,17 +41,17 @@ for i=1:neg_nImages
 %     pause;
 end
 
-save('pos_neg_feats.mat','pos_feats','neg_feats','pos_nImages','neg_nImages')
+save('pos_neg_feats_train.mat','pos_feats','neg_feats','pos_nImages','neg_nImages')
 %%
 close all
 clear
 %run('../vlfeat-0.9.20/toolbox/vl_setup')
 
-pos_imageDir = 'cropped_validation_images_face';
+pos_imageDir = 'cropped_validation_images_faces';
 pos_imageList = dir(sprintf('%s/*.jpg',pos_imageDir));
 pos_nImages = length(pos_imageList);
 
-neg_imageDir = 'cropped_validation_images_notface';
+neg_imageDir = 'cropped_validation_images_notfaces';
 neg_imageList = dir(sprintf('%s/*.jpg',neg_imageDir));
 neg_nImages = length(neg_imageList);
 
