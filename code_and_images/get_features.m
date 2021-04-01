@@ -1,6 +1,6 @@
 close all
 clear
-run('../vlfeat-0.9.20/toolbox/vl_setup')
+%run('../vlfeat-0.9.20/toolbox/vl_setup')
 
 pos_imageDir = 'cropped_training_images_faces';
 pos_imageList = dir(sprintf('%s/*.jpg',pos_imageDir));
