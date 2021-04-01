@@ -22,3 +22,15 @@ while n_have < n_want
     imwrite(gen_img, strcat(new_imageDir, "/", int2str(n_have), ".jpg"));
     n_have = n_have + 1;
 end
+%%
+new_imageDir2 = 'cropped_validation_images';
+mkdir(new_imageDir2);
+valid_size = round(n_want * (0.2));
+imageDir = 'cropped_training_images_notfaces';
+imageList = dir(sprintf('%s/*.jpg',imageDir));
+imageDir2 = 'cropped_training_images_faces';
+imageList2 = dir(sprintf('%s/*.jpg',imageDir2));
+for i=1:1:valid_size
+   movefile(strcat(imageList(i).folder, "/",imageList(i).name), 'cropped_validation_images');
+   movefile(strcat(imageList2(i).folder, "/",imageList2(i).name), 'cropped_validation_images');
+end
