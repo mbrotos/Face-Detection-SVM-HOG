@@ -1,4 +1,4 @@
-run('../vlfeat-0.9.20/toolbox/vl_setup')
+%run('../vlfeat-0.9.20/toolbox/vl_setup')
 imageDir = 'test_images';
 imageList = dir(sprintf('%s/*.jpg',imageDir));
 nImages = length(imageList);
@@ -31,6 +31,7 @@ for i=1:nImages
 
         % create feature vector for the current window and classify it using the SVM model, 
         featureV = feats(r:r+5,c:c+5,:);
+        featureV = reshape(featureV, [1,cellsize*cellsize*31]);
         % take dot product between feature vector and w and add b,
         classified = featureV*w + b;
         % store the result in the matrix of confidence scores confs(r,c)
