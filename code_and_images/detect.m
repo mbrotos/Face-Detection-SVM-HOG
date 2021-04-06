@@ -44,6 +44,7 @@ for i=1:nImages
     % get the most confident predictions 
     [~,inds] = sort(confs(:),'descend');
     inds = inds(1:20); % (use a bigger number for better recall)
+    boxesAdded = 1;
     for n=1:numel(inds)        
         [row,col] = ind2sub([size(feats,1) size(feats,2)],inds(n));
         
@@ -55,7 +56,8 @@ for i=1:nImages
         image_name = {imageList(i).name};
         
         saveToggle = true;
-        for pInd=height(bboxes)-1:-1:height(bboxes)-n
+        pCount = 1;
+        for pInd=height(bboxes):-1:height(bboxes)-boxesAdded+2
             pBox = bboxes(pInd,:);
             
             bi=[max(bbox(1),pBox(1)) ; max(bbox(2),pBox(2)) ...
@@ -67,16 +69,18 @@ for i=1:nImages
                iw*ih;
             overlap=iw*ih/ua;
             if (overlap > thres)
-                 [pRow,pCol] = ind2sub([size(feats,1) size(feats,2)],inds(pInd));
-                 pConf = confs(pRow,pCol);
-                 if (pConf < conf)
+                saveToggle = false;
+                [pRow,pCol] = ind2sub([size(feats,1) size(feats,2)],inds(n-pCount));
+                pConf = confs(pRow,pCol);
+                if (pConf < conf)
                     bboxes(pInd,:) = bbox;
-                    saveToggle = false;
-                 end
-                 break;
+                end
+                break;
             end
+            pCount = pCount+1;
         end
         if (saveToggle)
+            boxesAdded = boxesAdded+1;
             % plot
             plot_rectangle = [bbox(1), bbox(2); ...
                 bbox(1), bbox(4); ...
@@ -91,7 +95,7 @@ for i=1:nImages
             image_names = [image_names; image_name];
         end
     end
-    %pause;
+    pause;
     fprintf('got preds for image %d/%d\n', i,nImages);
 end
 
