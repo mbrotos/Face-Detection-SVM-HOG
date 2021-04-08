@@ -14,6 +14,7 @@ thres = 0.3;
 load('my_svm.mat')
 
 for i=1:nImages
+    cla reset;
     % load and show the image
     im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
      imshow(im);
@@ -74,6 +75,7 @@ for i=1:nImages
                (pBox(3)-pBox(1)+1)*(pBox(4)-pBox(2)+1)-...
                iw*ih;
             overlap=iw*ih/ua;
+            disp(overlap)
             if (overlap > thres)
                 saveToggle = false;
                 [pRow,pCol] = ind2sub([size(feats,1) size(feats,2)],inds(n-pCount));
@@ -101,11 +103,12 @@ for i=1:nImages
             image_names = [image_names; image_name];
         end
     end
-    pause;
+    %
     fprintf('got preds for image %d/%d\n', i,nImages);
+    pause;
 end
 
-
+%%
 % evaluate
 label_path = 'test_images_gt.txt';
 [gt_ids, gt_bboxes, gt_isclaimed, tp, fp, duplicate_detections] = ...
@@ -132,7 +135,7 @@ load('my_svm.mat')
 for i=1:nImages
     % load and show the image
     im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
-    scales = [1,1/2,1/4,1/8];
+    scales = [1,1/2,1/4,1/8,1/16,1/32,1/64,1/128];
 
     for j=1:width(scales)
         imResized = imresize(im,scales(j));
@@ -161,7 +164,7 @@ for i=1:nImages
         end
         % get the most confident predictions 
         [~,inds] = sort(confs(:),'descend');
-        bestPredicts = 20;
+        bestPredicts = 40;
         if (bestPredicts > length(inds))
             bestPredicts = length(inds);
         end
@@ -170,7 +173,7 @@ for i=1:nImages
         for n=1:numel(inds)        
             [row,col] = ind2sub([size(feats,1) size(feats,2)],inds(n));
             conf = confs(row,col);            
-            if (conf < 0.7)
+            if (conf < 0.90)
                 continue
             end
             
@@ -194,7 +197,7 @@ end
 
 [sortedConfs, oIndx] = sort(confidences, 'descend');
 finalBBoxes = zeros(0,5);
-
+boxName = cell(100000,2);
 for i=1:height(sortedConfs)
     curBB = zeros([1,5]);
     curBB(1:4) = bboxes(oIndx(i),:);
@@ -213,19 +216,24 @@ for i=1:height(sortedConfs)
                (pBox(3)-pBox(1)+1)*(pBox(4)-pBox(2)+1)-...
                iw*ih;
             overlap=iw*ih/ua;
-            if (overlap > thres)
+            disp(overlap)
+            if (overlap > 0.2)
                 saveToggle = false;
                 break;
-            elseif (iw*ih == (curBB(3)-curBB(1)+1) * (curBB(4)-curBBbi(2)+1))
+            elseif (iw*ih == (curBB(3)-curBB(1)+1) * (curBB(4)-curBB(2)+1) || iw*ih == (pBox(3)-pBox(1)+1) * (pBox(4)-pBox(2)+1))
                 saveToggle = false;
                 break;
             end
             
         end
     end
+    
     if (saveToggle)
         curBB(5) = oIndx(i);
         finalBBoxes = [finalBBoxes; curBB];
+        boxName(i,:) = {(curImName{1,1}),curBB};
+    else
+        disp("false")
     end
 end
 

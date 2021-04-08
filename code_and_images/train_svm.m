@@ -4,7 +4,7 @@ load('pos_neg_feats_train.mat')
 feats = cat(1,pos_feats,neg_feats);
 labels = cat(1,ones(pos_nImages,1),-1*ones(neg_nImages,1));
 
-lambda = 0.1;
+lambda = 0.00001;
 [w,b] = vl_svmtrain(feats',labels',lambda);
 
 fprintf('Classifier performance on train data:\n')
