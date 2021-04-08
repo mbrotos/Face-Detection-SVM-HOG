@@ -216,6 +216,9 @@ for i=1:height(sortedConfs)
             if (overlap > thres)
                 saveToggle = false;
                 break;
+            elseif (iw*ih == (curBB(3)-curBB(1)+1) * (curBB(4)-curBBbi(2)+1))
+                saveToggle = false;
+                break;
             end
             
         end

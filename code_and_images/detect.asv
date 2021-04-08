@@ -82,6 +82,7 @@ for i=1:nImages
                     bboxes(pInd,:) = bbox;
                 end
                 break;
+            elseif (iw*ih == (bbox(3)-bbox(1)+1) * (bbox(4)-bi(2)+1))
             end
             pCount = pCount+1;
         end
@@ -132,15 +133,15 @@ load('my_svm.mat')
 for i=1:nImages
     % load and show the image
     im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
-    scaledImages = [2,1,1/2,1/4,1/8];
+    scales = [1,1/2,1/4,1/8];
 
-    for j=1:width(scaledImages)
-        imResized = imresize(im,)
-        imshow();
+    for j=1:width(scales)
+        imResized = imresize(im,scales(j));
+        imshow(imResized);
         hold on;
         % generate a grid of features across the entire image. you may want to 
         % try generating features more densely (i.e., not in a grid)
-        feats = vl_hog(scaledImages{2,j},cellSize);
+        feats = vl_hog(imResized,cellSize);
 
         % concatenate the features into 6x6 bins, and classify them (as if they
         % represent 36x36-pixel faces)
@@ -170,14 +171,14 @@ for i=1:nImages
         for n=1:numel(inds)        
             [row,col] = ind2sub([size(feats,1) size(feats,2)],inds(n));
             conf = confs(row,col);            
-%             if (conf < 0.7)
-%                 continue
-%             end
+            if (conf < 0.7)
+                continue
+            end
             
-            bbox = [ col*cellSize*(2^(j-1)) ...
-                     row*cellSize*(2^(j-1)) ...
-                    (col+cellSize-1)*cellSize*(2^(j-1)) ...
-                    (row+cellSize-1)*cellSize*(2^(j-1))];
+            bbox = [ col*cellSize*(scales(j)^-1) ...
+                     row*cellSize*(scales(j)^-1) ...
+                    (col+cellSize-1)*cellSize*(scales(j)^-1) ...
+                    (row+cellSize-1)*cellSize*(scales(j)^-1)];
             
             image_name = {imageList(i).name};
             % save         
