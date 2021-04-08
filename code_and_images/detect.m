@@ -132,15 +132,15 @@ load('my_svm.mat')
 for i=1:nImages
     % load and show the image
     im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
-    scaledImages = {1, 2, 3, 4; ...
-        im, imresize(im, 1/2),imresize(im, 1/4),imresize(im, 1/8)};
+    scales = [1,1/2,1/4,1/8];
 
-    for j=1:width(scaledImages)
-        imshow(scaledImages{2,j});
+    for j=1:width(scales)
+        imResized = imresize(im,scales(j));
+        imshow(imResized);
         hold on;
         % generate a grid of features across the entire image. you may want to 
         % try generating features more densely (i.e., not in a grid)
-        feats = vl_hog(scaledImages{2,j},cellSize);
+        feats = vl_hog(imResized,cellSize);
 
         % concatenate the features into 6x6 bins, and classify them (as if they
         % represent 36x36-pixel faces)
@@ -170,14 +170,14 @@ for i=1:nImages
         for n=1:numel(inds)        
             [row,col] = ind2sub([size(feats,1) size(feats,2)],inds(n));
             conf = confs(row,col);            
-%             if (conf < 0.7)
-%                 continue
-%             end
+            if (conf < 0.7)
+                continue
+            end
             
-            bbox = [ col*cellSize*(2^(j-1)) ...
-                     row*cellSize*(2^(j-1)) ...
-                    (col+cellSize-1)*cellSize*(2^(j-1)) ...
-                    (row+cellSize-1)*cellSize*(2^(j-1))];
+            bbox = [ col*cellSize*(scales(j)^-1) ...
+                     row*cellSize*(scales(j)^-1) ...
+                    (col+cellSize-1)*cellSize*(scales(j)^-1) ...
+                    (row+cellSize-1)*cellSize*(scales(j)^-1)];
             
             image_name = {imageList(i).name};
             % save         
@@ -187,22 +187,24 @@ for i=1:nImages
         end
 
     end
+    fprintf('got preds for image %d/%d\n', i,nImages);
 end
-
+%%
 %non-max suprression
 
 [sortedConfs, oIndx] = sort(confidences, 'descend');
-finalBBoxes = zeros(0,4);
+finalBBoxes = zeros(0,5);
 
 for i=1:height(sortedConfs)
-    curBB = bboxes(oIndx(i),:);
+    curBB = zeros([1,5]);
+    curBB(1:4) = bboxes(oIndx(i),:);
     curImName = image_names(oIndx(i),1);
     
     saveToggle = true;
     for j=1:height(finalBBoxes)
-        if (curImName == )
-            
-            pBox = finalBBoxes(j,:);
+        pBox = finalBBoxes(j,:);
+        pName = image_names(oIndx(pBox(5)),1);
+        if (strcmp(curImName{1,1}, pName{1,1}))
             bi=[max(curBB(1),pBox(1)) ; max(curBB(2),pBox(2)) ...
                 ; min(curBB(3),pBox(3)) ; min(curBB(4),pBox(4))];
             iw=bi(3)-bi(1)+1;
@@ -215,15 +217,48 @@ for i=1:height(sortedConfs)
                 saveToggle = false;
                 break;
             end
+            
         end
     end
     if (saveToggle)
+        curBB(5) = oIndx(i);
         finalBBoxes = [finalBBoxes; curBB];
     end
 end
 
+finalConfs = zeros([height(finalBBoxes),1]);
+finalImNames = strings([height(finalBBoxes),1]);
 
+for i=1:height(finalBBoxes)
+    finalConfs(i,1) = confidences(finalBBoxes(i,5));
+    finalImNames(i,1) = image_names(finalBBoxes(i,5));
+end
+
+%%
+cla reset;
+for i=1:nImages
+    im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
+    imshow(im);
+    hold on;
+    for j=1:height(finalBBoxes)
+        curBB = finalBBoxes(j,:);
+        curName = image_names(curBB(5),1);
+        if (strcmp(imageList(i).name, curName{1,1}))
+            % plot
+            plot_rectangle = [curBB(1), curBB(2); ...
+                curBB(1), curBB(4); ...
+                curBB(3), curBB(4); ...
+                curBB(3), curBB(2); ...
+                curBB(1), curBB(2)];
+            plot(plot_rectangle(:,1), plot_rectangle(:,2), 'g-');
+        end
+    end
+    fprintf('printed image %d/%d\n', i,nImages);
+    pause;
+    cla reset;
+end
+%%
 % evaluate
 label_path = 'test_images_gt.txt';
 [gt_ids, gt_bboxes, gt_isclaimed, tp, fp, duplicate_detections] = ...
-    evaluate_detections_on_test(bboxes, confidences, image_names, label_path);
+    evaluate_detections_on_test(finalBBoxes(:,1:4), finalConfs, finalImNames, label_path);
