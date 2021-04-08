@@ -196,25 +196,22 @@ finalBBoxes = zeros(0,4);
 
 for i=1:height(sortedConfs)
     curBB = bboxes(oIndx(i),:);
-    curImName = image_names(oIndx(i),1);
-    
+    curImName = image_names(oIndx(i),1)
     saveToggle = true;
     for j=1:height(finalBBoxes)
-        if (curImName == )
-            
-            pBox = finalBBoxes(j,:);
-            bi=[max(curBB(1),pBox(1)) ; max(curBB(2),pBox(2)) ...
-                ; min(curBB(3),pBox(3)) ; min(curBB(4),pBox(4))];
-            iw=bi(3)-bi(1)+1;
-            ih=bi(4)-bi(2)+1;
-            ua=(curBB(3)-curBB(1)+1)*(curBB(4)-curBB(2)+1)+...
-               (pBox(3)-pBox(1)+1)*(pBox(4)-pBox(2)+1)-...
-               iw*ih;
-            overlap=iw*ih/ua;
-            if (overlap > thres)
-                saveToggle = false;
-                break;
-            end
+        
+        pBox = finalBBoxes(j,:);
+        bi=[max(curBB(1),pBox(1)) ; max(curBB(2),pBox(2)) ...
+            ; min(curBB(3),pBox(3)) ; min(curBB(4),pBox(4))];
+        iw=bi(3)-bi(1)+1;
+        ih=bi(4)-bi(2)+1;
+        ua=(curBB(3)-curBB(1)+1)*(curBB(4)-curBB(2)+1)+...
+           (pBox(3)-pBox(1)+1)*(pBox(4)-pBox(2)+1)-...
+           iw*ih;
+        overlap=iw*ih/ua;
+        if (overlap > thres)
+            saveToggle = false;
+            break;
         end
     end
     if (saveToggle)
