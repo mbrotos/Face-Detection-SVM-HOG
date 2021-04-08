@@ -127,16 +127,18 @@ image_names = cell(0,1);
 cellSize = 6;
 dim = 36;
 thres = 0.5;
-
+scales = [1,1/2,1/4,1/8,1/16,1/32,1/64,1/128];
 load('my_svm.mat')
-
-
 
 for i=1:nImages
     % load and show the image
+    cla reset;
     im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
-    scales = [1,1/2,1/4,1/8,1/16,1/32,1/64,1/128];
-
+    
+    im_bboxes = zeros(0,4);
+    im_confidences = zeros(0,1);
+    im_image_names = cell(0,1);
+    
     for j=1:width(scales)
         imResized = imresize(im,scales(j));
         imshow(imResized);
@@ -184,30 +186,24 @@ for i=1:nImages
             
             image_name = {imageList(i).name};
             % save         
-            bboxes = [bboxes; bbox];
-            confidences = [confidences; conf];
-            image_names = [image_names; image_name];
+            im_bboxes = [im_bboxes; bbox];
+            im_confidences = [im_confidences; conf];
+            im_image_names = [im_image_names; image_name];
         end
 
     end
-    fprintf('got preds for image %d/%d\n', i,nImages);
-end
-%%
-%non-max suprression
-
-[sortedConfs, oIndx] = sort(confidences, 'descend');
-finalBBoxes = zeros(0,5);
-boxName = cell(100000,2);
-for i=1:height(sortedConfs)
-    curBB = zeros([1,5]);
-    curBB(1:4) = bboxes(oIndx(i),:);
-    curImName = image_names(oIndx(i),1);
     
-    saveToggle = true;
-    for j=1:height(finalBBoxes)
-        pBox = finalBBoxes(j,:);
-        pName = image_names(oIndx(pBox(5)),1);
-        if (strcmp(curImName{1,1}, pName{1,1}))
+    [sortedConfs, oIndx] = sort(im_confidences, 'descend');
+    finalBBoxes = zeros(0,5);
+    
+    for indx=1:height(sortedConfs)
+        curBB = zeros(0,5);
+        curBB(1:4) = im_bboxes(oIndx(indx),:);
+        curBB(5) = oIndx(indx);
+        
+        saveToggle = true;
+        for j=1:height(finalBBoxes)
+            pBox = finalBBoxes(j,:);
             bi=[max(curBB(1),pBox(1)) ; max(curBB(2),pBox(2)) ...
                 ; min(curBB(3),pBox(3)) ; min(curBB(4),pBox(4))];
             iw=bi(3)-bi(1)+1;
@@ -216,60 +212,48 @@ for i=1:height(sortedConfs)
                (pBox(3)-pBox(1)+1)*(pBox(4)-pBox(2)+1)-...
                iw*ih;
             overlap=iw*ih/ua;
-            disp(overlap)
-            if (overlap > 0.2)
+            if (overlap > 0.5)
                 saveToggle = false;
                 break;
             elseif (iw*ih == (curBB(3)-curBB(1)+1) * (curBB(4)-curBB(2)+1) || iw*ih == (pBox(3)-pBox(1)+1) * (pBox(4)-pBox(2)+1))
                 saveToggle = false;
                 break;
             end
-            
+        end
+
+        if (saveToggle)
+            finalBBoxes = [finalBBoxes; curBB];
         end
     end
     
-    if (saveToggle)
-        curBB(5) = oIndx(i);
-        finalBBoxes = [finalBBoxes; curBB];
-        boxName(i,:) = {(curImName{1,1}),curBB};
-    else
-        disp("false")
+    finalConfs = zeros([height(finalBBoxes),1]);
+    finalImNames = strings([height(finalBBoxes),1])+image_name;
+
+    for indx=1:height(finalBBoxes)
+        finalConfs(indx,1) = im_confidences(finalBBoxes(indx,5));
     end
-end
-
-finalConfs = zeros([height(finalBBoxes),1]);
-finalImNames = strings([height(finalBBoxes),1]);
-
-for i=1:height(finalBBoxes)
-    finalConfs(i,1) = confidences(finalBBoxes(i,5));
-    finalImNames(i,1) = image_names(finalBBoxes(i,5));
-end
-
-%%
-cla reset;
-for i=1:nImages
-    im = im2single(imread(sprintf('%s/%s',imageDir,imageList(i).name)));
     imshow(im);
-    hold on;
     for j=1:height(finalBBoxes)
         curBB = finalBBoxes(j,:);
-        curName = image_names(curBB(5),1);
-        if (strcmp(imageList(i).name, curName{1,1}))
-            % plot
-            plot_rectangle = [curBB(1), curBB(2); ...
-                curBB(1), curBB(4); ...
-                curBB(3), curBB(4); ...
-                curBB(3), curBB(2); ...
-                curBB(1), curBB(2)];
-            plot(plot_rectangle(:,1), plot_rectangle(:,2), 'g-');
-        end
+        % plot
+        plot_rectangle = [curBB(1), curBB(2); ...
+            curBB(1), curBB(4); ...
+            curBB(3), curBB(4); ...
+            curBB(3), curBB(2); ...
+            curBB(1), curBB(2)];
+        plot(plot_rectangle(:,1), plot_rectangle(:,2), 'g-');
     end
-    fprintf('printed image %d/%d\n', i,nImages);
-    pause;
-    cla reset;
+    fprintf('got preds for image %d/%d\n', i,nImages);    
+    
+    if (length(finalBBoxes)>0)
+        bboxes = [bboxes; finalBBoxes(:,1:4)];
+        confidences = [confidences; finalConfs];
+        image_names = [image_names; finalImNames];
+    end
+    %pause;
 end
 %%
 % evaluate
 label_path = 'test_images_gt.txt';
 [gt_ids, gt_bboxes, gt_isclaimed, tp, fp, duplicate_detections] = ...
-    evaluate_detections_on_test(finalBBoxes(:,1:4), finalConfs, finalImNames, label_path);
+    evaluate_detections_on_test(bboxes, confidences, image_names, label_path);
