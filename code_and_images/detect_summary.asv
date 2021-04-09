@@ -1,0 +1,22 @@
+disp("First, we generate a grid of features across the entire image along")
+disp("with concatenating the features into 6x6 bins, and classifying them (as if they represent 36x36-pixel faces)");
+
+disp()
+
+disp("We increased the number of most condident prediction to improve recall.")
+disp("We also verified that it did not exceed the number of predictions found")
+
+disp()
+
+disp("After completeing the single window face detection and see bad results with non-max suppression")
+disp("we implemented multi-scale face detection on various scale factors.")
+
+disp()
+
+disp("Initally, we used inverse powers of 2 as scaling factors and recieved a max")
+disp("average percision of 0.340. By reducing the scaling factors increments")
+disp("we observed much better average persicion at around 0.520")
+
+disp()
+
+disp("Our final optimization was to implement ")
