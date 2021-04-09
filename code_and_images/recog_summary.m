@@ -1,0 +1,16 @@
+fprintf('For the starting part of the assignment we need to create a training and validation dataset.\n');
+fprintf('We are already provided with a large number of training images that have a face in them.\n');
+fprintf('but we have a limited amount of images without any faces in them that have a larger size.\n');
+fprintf('In order for our model to work properly and have a high accuracy we need to have a uniform\n');
+fprintf('distribution between the training images with and without faces in them. What we did was we\n');
+fprintf('extracted a a large number of no-face image dataset from our limited larger no-face images.\n');
+fprintf('In order to do this we had to choose a random coordinate inside the large image and take 36x36\n');
+fprintf('image out of it. if our random coordinate was (x, y) we did (x+36, y+36) and extracted the smaller\n');
+fprintf('image out. we kept extracting until we had the same number of no-face instances as the face ones.\n');
+fprintf('We then split our dataset into train and validation (40 perc noface + 40 perc face for train, 10 perc face \n');
+fprintf(' and 10 perc noface for validation).\n');
+fprintf('extracting features and training our support vector machince model was easy as it was done through the vl_feat\n');
+fprintf('library. We then saved our SVM weights to be used during the validation process and testing.\n');
+fprintf('our validation results were pretty good almost always above 95 precent. tweaking the Lambda parameter\n');
+fprintf('resulted in different accuracy on the validation set (lamnda of 0.0001, resulted in 100 percent accuracy.)\n');
+fprintf('While 100 percent accuracy seems great, we need to find a balance in bias-variance for our model.');
