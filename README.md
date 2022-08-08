@@ -18,6 +18,8 @@ Multi-scale Face Detection using SVM and Histogram of Oriented Gradients feature
 
 # NMS (Non Maximum Suppression)
 
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/NMS-mono.png)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/NMS-multi.png)
 ![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/NMS-algo.png)
 
 
