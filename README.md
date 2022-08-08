@@ -11,6 +11,16 @@ Multi-scale Face Detection using SVM and Histogram of Oriented Gradients feature
 - Adam Sorrenti
 - Eisa Keramati nejad
 
+# HOG (Histogram of Oriented Gradients)
+
+
+# SVM (Support Vector Machine)
+
+# NMS (Non Maximum Suppression)
+
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/NMS-algo.png)
+
+
 # Results
 ![Class](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/class-classified.png "Class")
 
