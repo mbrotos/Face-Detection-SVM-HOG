@@ -12,7 +12,12 @@ Multi-scale Face Detection using SVM and Histogram of Oriented Gradients feature
 - Eisa Keramati nejad
 
 # HOG (Histogram of Oriented Gradients)
-
+## Original Scale
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/class-x1-hog-8x8.png)
+## 1/2x Scale
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/class-x0.5-hog-8x8.png)
+## 2x Scale
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/class-x2-hog-8x8.png)
 
 # SVM (Support Vector Machine)
 
