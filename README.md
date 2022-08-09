@@ -47,6 +47,34 @@ Compute HOG:
 
 # SVM (Support Vector Machine)
 
+Faces training set: (36x36 pixel images)
+
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_faces/caltech_web_crop_02344.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_faces/caltech_web_crop_02345.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_faces/caltech_web_crop_02346.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_faces/caltech_web_crop_02347.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_faces/caltech_web_crop_02348.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_faces/caltech_web_crop_02349.jpg)
+
+
+
+Not faces set:
+
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_notfaces/2211.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_notfaces/2212.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_notfaces/2213.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_notfaces/2214.jpg)
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/code_and_images/cropped_training_images_notfaces/2215.jpg)
+
+
+
+<img src="https://lh6.googleusercontent.com/wVQECvLrpASDIYsN4upUV9zALVxytbtytwHxDhHAvI5OQdIrs3zTukkjkbweHBdlFY2DN_AYu186_0mcgprwT4LJ6oAGcGPwReRz0hUidmIID7cNy34SqdWSWjh8CWCeG4qL8bE" width="1000" height="420" style="background-color: white"></img>
+
+
+<img src="https://www.mdpi.com/sensors/sensors-21-04283/article_deploy/html/images/sensors-21-04283-g002.png" width="570" height="420" style="border:5px solid black"></img>
+
+
+
 # NMS (Non Maximum Suppression)
 
 ![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/NMS-mono.png)
