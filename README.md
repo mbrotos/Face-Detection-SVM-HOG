@@ -2,6 +2,12 @@
 
 - [Summary](#summary)
 - [Contributors](#contributors)
+- [HOG (Histogram of Oriented Gradients)](#hog-histogram-of-oriented-gradients)
+  - [Original Scale](#original-scale)
+  - [1/2x Scale](#12x-scale)
+  - [2x Scale](#2x-scale)
+- [SVM (Support Vector Machine)](#svm-support-vector-machine)
+- [NMS (Non Maximum Suppression)](#nms-non-maximum-suppression)
 - [Results](#results)
 
 # Summary
