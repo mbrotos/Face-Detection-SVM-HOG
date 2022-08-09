@@ -15,7 +15,7 @@ Multi-scale Face Detection using SVM and Histogram of Oriented Gradients feature
 
 # HOG (Histogram of Oriented Gradients)
 
-Consider matrix M a 3x3 image segment representing pixel intensity(I), where (r,c) is a given pixel.
+Consider matrix M, a 3x3 image segment representing pixel intensity(I), where (r,c) is a given pixel.
 ```
         [ 254 143 22 ] 
     M = [ 230 150 25 ]  
@@ -28,6 +28,15 @@ $$G_x(r,c)=I(r,c+1)-I(r,c-1)$$ $$G_y(r,c)=I(r-1,c)-I(r+1,c)$$
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Intensity_image_with_gradient_images.png/390px-Intensity_image_with_gradient_images.png)
 
 From left to right shows, an intensity image, $G_x$, and $G_y$
+
+
+Calculate gradient direction and magnitude:
+$$Magnitude(µ)=sqrt{G_x^2+G_y^2}$$
+$$Angle(θ)=|tan^{-1}(G_y/G_x)|$$
+
+Compute HOG:
+
+![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/HOG.png)
 
 ## Original Scale
 ![](https://github.com/mbrotos/Face-Detection-SVM-HOG/blob/main/class-x1-hog-8x8.png)
