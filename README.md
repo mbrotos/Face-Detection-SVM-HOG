@@ -37,7 +37,7 @@ From left to right shows, an intensity image, $G_x$, and $G_y$
 
 
 Calculate gradient direction and magnitude:
-$$Magnitude(µ)=sqrt{G_x^2+G_y^2}$$
+$$Magnitude(µ)=\sqrt{G_x^2+G_y^2}$$
 $$Angle(θ)=|tan^{-1}(G_y/G_x)|$$
 
 Compute HOG:
